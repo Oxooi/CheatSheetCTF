@@ -361,6 +361,7 @@ def hydra_ssh():
         print(f"{Fore.GREEN}[+]{Fore.RESET} Hydra brute finished")
         sleep(1)
         input(f"{Fore.RED}[!]{Fore.RESET} Press any key to continue...")
+        hydra()
 
 hydra()
 
