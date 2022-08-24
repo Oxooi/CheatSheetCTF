@@ -1,6 +1,7 @@
 #!/usr/bin/python3
 # -*- coding: utf-8 -*-
 
+from ast import For
 from re import M
 import sys
 import os
@@ -236,5 +237,24 @@ def netcat():
 <------------------------------------------------------->"""
     print(banner)
 
+def hydra_banner():
+    os.system('clear')
+    banner = f"""{Style.BRIGHT}{Fore.LIGHTCYAN_EX}
+██╗  ██╗██╗   ██╗██████╗ ██████╗  █████╗ 
+██║  ██║╚██╗ ██╔╝██╔══██╗██╔══██╗██╔══██╗
+███████║ ╚████╔╝ ██║  ██║██████╔╝███████║
+██╔══██║  ╚██╔╝  ██║  ██║██╔══██╗██╔══██║
+██║  ██║   ██║   ██████╔╝██║  ██║██║  ██║
+╚═╝  ╚═╝   ╚═╝   ╚═════╝ ╚═╝  ╚═╝╚═╝  ╚═╝ {Fore.RESET}{Style.RESET_ALL}
+<---------------------------------------->"""
+    print(banner)
 
-main()
+
+def hydra():
+    hydra_banner()
+
+
+hydra()
+
+if __name__ == "__main__":
+    main()                                                                       #Call main function to start the program
