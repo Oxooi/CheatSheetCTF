@@ -21,6 +21,10 @@ interf = "N/A"  # Global variable for interface
 # Global variable for Hydra
 wordlist = ""  # Global variable for wordlist
 uname = ""  # Global variable for wordlist
+uname_Wordlist = "" # Global variable for wordlist
+passwd = ""  # Global variable for password
+passwd_Wordlist = "" # Global variable for password
+
 
 # Main function
 
@@ -306,6 +310,8 @@ def hydra_ssh():
     os.system('clear')
     hydra_banner()
     choice = input(f'\n{Fore.YELLOW}[*]{Fore.RESET} Do you know the {Fore.MAGENTA}username{Fore.RESET},{Fore.CYAN}password{Fore.RESET} or {Fore.RED}nothing{Fore.RESET} ? ({Fore.MAGENTA}u{Fore.RESET}/{Fore.CYAN}p{Fore.RESET}/{Fore.RED}n{Fore.RESET}): ')
+    
+    #If  the user knows the username
     if choice == 'u':
 
         #Input Section
@@ -345,7 +351,7 @@ def hydra_ssh():
 
         #IP Check
         if ip == '':
-            print(f"{Fore.RED}[!]{Fore.RESET} You didn't enter the {Fore.LIGHTGREEN_EX}username{Fore.RESET}")
+            print(f"{Fore.RED}[!]{Fore.RESET} You didn't enter the {Fore.LIGHTGREEN_EX}IP{Fore.RESET}")
             print(f"{Fore.RED}[!]{Fore.RESET} Come back to the menu and try again")
             sleep(1)
             input(f"{Fore.RED}[!]{Fore.RESET} Press any key to continue...")
@@ -353,11 +359,122 @@ def hydra_ssh():
         else:
             globals()['ip'] = ip
         
-        print(uname  + " " + wordlist)
         print(f"{Fore.GREEN}[+]{Fore.RESET} Hydra brute starting...")
         sleep(1)
-        hydra = "hydra -l " + uname + " -P " + wordlist + " " + ip + " -s 22 -t 1 ssh"
-        os.system(hydra)
+        hydra_task = "hydra -l " + uname + " -P " + wordlist + " " + ip + " -s 22 -t 1 ssh"
+        os.system(hydra_task)
+        print(f"{Fore.GREEN}[+]{Fore.RESET} Hydra brute finished")
+        sleep(1)
+        input(f"{Fore.RED}[!]{Fore.RESET} Press any key to continue...")
+        hydra()
+
+    #If the user know the password
+    elif choice == 'p':
+        
+        #Input Section
+        passwd = input(f'\n{Fore.YELLOW}[*]{Fore.RESET} Enter the {Fore.CYAN}password{Fore.RESET} : ')
+        wordlist = input(f'{Fore.YELLOW}[*]{Fore.RESET} Enter the path of your {Fore.MAGENTA}wordlist{Fore.RESET} (Default: /usr/share/wordlists/rockyou.txt) : ')
+        ip = input(f'{Fore.YELLOW}[*]{Fore.RESET} Enter the {Fore.LIGHTGREEN_EX}ip{Fore.RESET} : ')
+        
+        #Checking Section
+        #Username Check
+        if passwd == '':
+            print(f"{Fore.RED}[!]{Fore.RESET} You didn't enter the {Fore.MAGENTA}password{Fore.RESET}")
+            print(f"{Fore.RED}[!]{Fore.RESET} Come back to the menu and try again")
+            sleep(1)
+            input(f"{Fore.RED}[!]{Fore.RESET} Press any key to continue...")
+            hydra_ssh()
+
+        #Wordlist Check
+        if wordlist == '':
+            wordlist = "/usr/share/wordlists/rockyou.txt"
+            if os.path.exists(wordlist):
+                globals()['wordlist'] = wordlist
+            else:
+                print(f"{Fore.RED}[!]{Fore.RESET} Wordlist not found")
+                print(f"{Fore.RED}[!]{Fore.RESET} Come back to the menu and try again")
+                sleep(1)
+                input(f"{Fore.RED}[!]{Fore.RESET} Press any key to continue...")
+                hydra_ssh()
+        else:
+            if os.path.exists(wordlist):
+                globals()['wordlist'] = wordlist
+            else:
+                print(f"{Fore.RED}[!]{Fore.RESET} Wordlist not found")
+                print(f"{Fore.RED}[!]{Fore.RESET} Come back to the menu and try again")
+                sleep(1)
+                input(f"{Fore.RED}[!]{Fore.RESET} Press any key to continue...")
+                hydra_ssh()
+
+        #IP Check
+        if ip == '':
+            print(f"{Fore.RED}[!]{Fore.RESET} You didn't enter the {Fore.LIGHTGREEN_EX}IP{Fore.RESET}")
+            print(f"{Fore.RED}[!]{Fore.RESET} Come back to the menu and try again")
+            sleep(1)
+            input(f"{Fore.RED}[!]{Fore.RESET} Press any key to continue...")
+            hydra_ssh()
+        else:
+            globals()['ip'] = ip
+        
+        print(f"{Fore.GREEN}[+]{Fore.RESET} Hydra brute starting...")
+        sleep(1)
+        hydra_task = "hydra -p " + passwd + " -L " + wordlist + " " + ip + " -s 22 -t 1 ssh"
+        os.system(hydra_task)
+        print(f"{Fore.GREEN}[+]{Fore.RESET} Hydra brute finished")
+        sleep(1)
+        input(f"{Fore.RED}[!]{Fore.RESET} Press any key to continue...")
+        hydra()
+    
+    elif choice == 'n':
+
+        #Input Section
+        passwd_Wordlist = input(f'\n{Fore.YELLOW}[*]{Fore.RESET} Enter the {Fore.CYAN}password wordlist{Fore.RESET} : ')
+        uname_Wordlist = input(f'{Fore.YELLOW}[*]{Fore.RESET} Enter the path of your {Fore.MAGENTA}username wordlist{Fore.RESET} : ')
+        ip = input(f'{Fore.YELLOW}[*]{Fore.RESET} Enter the {Fore.LIGHTGREEN_EX}ip{Fore.RESET} : ')
+        
+        #Checking Section
+        #Password Check
+        if passwd_Wordlist == '':
+            print(f"{Fore.RED}[!]{Fore.RESET} You didn't enter the {Fore.CYAN}password{Fore.RESET}")
+            print(f"{Fore.RED}[!]{Fore.RESET} Come back to the menu and try again")
+            sleep(1)
+            input(f"{Fore.RED}[!]{Fore.RESET} Press any key to continue...")
+            hydra_ssh()
+
+        #Username Check
+        if uname_Wordlist == '':
+            print(f"{Fore.RED}[!]{Fore.RESET} You didn't enter the {Fore.MAGENTA}username{Fore.RESET}")
+            print(f"{Fore.RED}[!]{Fore.RESET} Come back to the menu and try again")
+            sleep(1)
+            input(f"{Fore.RED}[!]{Fore.RESET} Press any key to continue...")
+            hydra_ssh()
+
+        #Wordlist Check
+        if os.path.exists(passwd_Wordlist):
+            globals()['passwd_Wordlist'] = passwd_Wordlist
+        elif os.path.exists(uname_Wordlist):
+            globals()['uname_Wordlist'] = uname_Wordlist
+        else:
+            print(f"{Fore.RED}[!]{Fore.RESET} Wordlist not found")
+            print(f"{Fore.RED}[!]{Fore.RESET} Come back to the menu and try again")
+            sleep(1)
+            input(f"{Fore.RED}[!]{Fore.RESET} Press any key to continue...")
+            hydra_ssh()
+
+        #IP Check
+        if ip == '':
+            print(f"{Fore.RED}[!]{Fore.RESET} You didn't enter the {Fore.LIGHTGREEN_EX}IP{Fore.RESET}")
+            print(f"{Fore.RED}[!]{Fore.RESET} Come back to the menu and try again")
+            sleep(1)
+            input(f"{Fore.RED}[!]{Fore.RESET} Press any key to continue...")
+            hydra_ssh()
+        else:
+            globals()['ip'] = ip
+        
+        print(f"{Fore.GREEN}[+]{Fore.RESET} Hydra brute starting...")
+        sleep(1)
+        hydra_task = "hydra -P " + passwd_Wordlist + " -L " + uname_Wordlist + " " + ip + " -s 22 -t 1 ssh"
+        os.system(hydra_task)
         print(f"{Fore.GREEN}[+]{Fore.RESET} Hydra brute finished")
         sleep(1)
         input(f"{Fore.RED}[!]{Fore.RESET} Press any key to continue...")
