@@ -227,9 +227,8 @@ def python():  # Python reverse shell function
     print(f"{Fore.YELLOW}[*]{Fore.RESET} Your shell is created")
     choice(shell, "py")
 
-
-def php():  # PHP reverse shell function
-    os.system('clear')  # Its the same code as bash reverse shell function
+def php():                                                                         #PHP reverse shell function
+    os.system('clear')                                                            #Its the same code as bash reverse shell function
     banner()
     port1 = "1234"
     if ipadd == "0.0.0.0":
