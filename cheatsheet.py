@@ -44,9 +44,10 @@ def main():
     print(f'{Fore.YELLOW}[*]{Fore.RESET} Made by : {Style.BRIGHT}{Fore.LIGHTCYAN_EX}https://github.com/Oxooi{Fore.RESET}{Style.RESET_ALL}')
     print("")
     print("+-------------------------------------+")
+    print(f"|{Fore.YELLOW}[0] {Fore.LIGHTYELLOW_EX}Set Interface IP{Fore.RESET} ({Fore.LIGHTRED_EX}IMPORTANT{Fore.RESET})     |")
     print(f"|{Fore.YELLOW}[1] {Fore.LIGHTYELLOW_EX}Create Reverse Shells{Fore.RESET}            |")
     print(f"|{Fore.YELLOW}[2] {Fore.LIGHTYELLOW_EX}Netcat Connection{Fore.RESET}                |")
-    print(f"|{Fore.YELLOW}[3] {Fore.LIGHTYELLOW_EX}Set Interface IP{Fore.RESET} ({Fore.LIGHTRED_EX}IMPORTANT{Fore.RESET})     |")
+    print(f"|{Fore.YELLOW}[3] {Fore.LIGHTYELLOW_EX}Hydra Brute Force{Fore.RESET}                |")
     print("+-------------------------------------+")
     print("")
     print(f"{Fore.GREEN}[+] {Style.BRIGHT}{Fore.LIGHTBLUE_EX}Local IP {Fore.RESET}: " + ipadd + f"{Style.RESET_ALL}")
@@ -54,13 +55,15 @@ def main():
     print("\n\n-------------")
     choice = input('\nEnter your choice : ')
     match choice:  # Match choice
+        case '0':   # Set interface IP
+            setIp()
+            backtomain()
         case '1':  # Create reverse shell
             revershell()
         case '2':  # Netcat connection
             netcat()
-        case '3':  # Set interface IP
-            setIp()
-            backtomain()
+        case '3':  
+            hydra()
 
 # Banner function
 
@@ -124,17 +127,36 @@ def choice(shell, extention):  # Choice for reverse shell
     return shell, extention
 
 # Go back to main menu function
-
-
 def backtomain():
     print(f'\n{Fore.YELLOW}[*]{Fore.RESET} Go back to main')
     sleep(1)
     os.system('clear')
     main()
 
+def jtr_banner():
+    banner = f"""{Style.BRIGHT}{Fore.LIGHTRED_EX}     ██╗ ██████╗ ██╗  ██╗███╗   ██╗██████╗ ██████╗ ██╗██████╗ ██████╗ ███████╗██████╗ 
+     ██║██╔═══██╗██║  ██║████╗  ██║╚════██╗██╔══██╗██║██╔══██╗██╔══██╗██╔════╝██╔══██╗
+     ██║██║   ██║███████║██╔██╗ ██║ █████╔╝██████╔╝██║██████╔╝██████╔╝█████╗  ██████╔╝
+██   ██║██║   ██║██╔══██║██║╚██╗██║██╔═══╝ ██╔══██╗██║██╔═══╝ ██╔═══╝ ██╔══╝  ██╔══██╗
+╚█████╔╝╚██████╔╝██║  ██║██║ ╚████║███████╗██║  ██║██║██║     ██║     ███████╗██║  ██║
+ ╚════╝  ╚═════╝ ╚═╝  ╚═╝╚═╝  ╚═══╝╚══════╝╚═╝  ╚═╝╚═╝╚═╝     ╚═╝     ╚══════╝╚═╝  ╚═╝{Style.RESET_ALL}{Fore.RESET}
+ ------------------------------------------------------------------------------------->os.system(hydra)
+                                                                                      """
+    print(banner)
+
+#John the Ripper
+def jtr():
+    jtr_banner()
+    modules = f"""
+    - [{Fore.LIGHTBLUE_EX}1{Fore.RESET}] {Fore.LIGHTCYAN_EX} ZIP Wordlist attack{Fore.RESET}
+    - [{Fore.LIGHTBLUE_EX}2{Fore.RESET}] {Fore.LIGHTCYAN_EX} Hash Wordlist attack{Fore.RESET}
+    - [{Fore.LIGHTBLUE_EX}3{Fore.RESET}] {Fore.LIGHTCYAN_EX} MD5{Fore.RESET}
+    - [{Fore.LIGHTBLUE_EX}4{Fore.RESET}] {Fore.LIGHTCYAN_EX} Sha1{Fore.RESET}
+    - [{Fore.LIGHTBLUE_EX}5{Fore.RESET}] {Fore.LIGHTCYAN_EX} Base64{Fore.RESET}
+    - [{Fore.LIGHTBLUE_EX}99{Fore.RESET}] {Fore.LIGHTCYAN_EX}Back to main{Fore.RESET}
+    """
+    print(modules)
 # The main function for reverse shells
-
-
 def revershell():
     os.system('clear')
     banner()
@@ -143,7 +165,7 @@ def revershell():
 - [{Style.BRIGHT}2{Style.RESET_ALL}] {Style.BRIGHT}{Fore.LIGHTCYAN_EX}Python {Fore.CYAN}reverse_shell {Fore.RESET}{Style.RESET_ALL}
 - [{Style.BRIGHT}3{Style.RESET_ALL}] {Style.BRIGHT}{Fore.LIGHTGREEN_EX}PHP {Fore.GREEN}reverse_shell {Fore.RESET}{Style.RESET_ALL}
 - [{Style.BRIGHT}4{Style.RESET_ALL}] {Style.BRIGHT}{Fore.LIGHTMAGENTA_EX}Netcat {Fore.MAGENTA}reverse_shell {Fore.RESET}{Style.RESET_ALL}
-- [{Style.BRIGHT}6{Style.RESET_ALL}] {Style.BRIGHT}Exit {Style.RESET_ALL}
+- [{Style.BRIGHT}99{Style.RESET_ALL}] {Style.BRIGHT}Back to main{Style.RESET_ALL}
 """
     print(shells)
     c_rs = input('\nEnter your choice : ')  # Choice for reverse shell
@@ -156,12 +178,10 @@ def revershell():
             php()
         case '4':  # Netcat reverse shell
             nc()
-        case '6':  # Exit
+        case '99':  # Exit
             backtomain()
 
 # Bash reverse shell function
-
-
 def bash():
     os.system('clear')
     banner()
@@ -284,7 +304,7 @@ def hydra():
     print(f'- [{Style.BRIGHT}3{Style.RESET_ALL}] {Style.BRIGHT}{Fore.MAGENTA}HTTP (POST-Form){Fore.RESET}{Style.RESET_ALL}')
     print(f'- [{Style.BRIGHT}4{Style.RESET_ALL}] {Style.BRIGHT}{Fore.MAGENTA}SQL{Fore.RESET}{Style.RESET_ALL}')
     print(f'- [{Style.BRIGHT}5{Style.RESET_ALL}] {Style.BRIGHT}{Fore.MAGENTA}SMTP (Enumerate Users){Fore.RESET}{Style.RESET_ALL}')
-    print(f'- [{Style.BRIGHT}9{Style.RESET_ALL}] {Style.BRIGHT}{Fore.MAGENTA}Back{Fore.RESET}{Style.RESET_ALL}')
+    print(f'- [{Style.BRIGHT}99{Style.RESET_ALL}] {Style.BRIGHT}{Fore.MAGENTA}Back to main{Fore.RESET}{Style.RESET_ALL}')
 
     choice = input('\nEnter your choice : ')
     if choice == '1':
@@ -480,7 +500,8 @@ def hydra_ssh():
         input(f"{Fore.RED}[!]{Fore.RESET} Press any key to continue...")
         hydra()
 
-hydra()
+# hydra()
+jtr()
 
 # if __name__ == "__main__":
 #     main()                                                                       #Call main function to start the program
